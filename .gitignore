@@ -5,7 +5,6 @@ __pycache__/
 
 pyc*
 virtual/
-myproject/__pycache__/
 
 # C extensions
 *.so
