@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Project, Rating_Content
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 # Serializers allow complex data such as querysets and model instances to
 # be converted to native Python datatypes that can then be easily rendered
@@ -25,13 +26,17 @@ class UserSerializer(serializers.ModelSerializer):
         }
         # write_only means we won't be able to see it
 
-        def create(self, validated_data):
-            """This method is already included in the class but I overode it.
-            validated data is data coming from the request and has
-            already met all the requirements for the model.
-            """
-            user = User.objects.create_user(**validated_data)
-            return user
+    def create(self, validated_data):
+        """This method is already included in the class but I overode it.
+        validated data is data coming from the request and has
+        already met all the requirements for the model.
+        """
+        user = User.objects.create_user(**validated_data)
+        Token.objects.create(user=user)
+        # You can assign a variable to the token and pass it to return
+        # to make it available. In this case it is not needed.
+        # So we just create it.
+        return user
 
 
 class ProjectSerializer(serializers.ModelSerializer):

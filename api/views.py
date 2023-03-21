@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -23,6 +24,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]  # unrestricted access
 
     # The action decorator will route GET requests by default, but may also
     # accept other HTTP methods by setting the methods argument.
@@ -73,3 +75,4 @@ class RatingContentViewSet(viewsets.ModelViewSet):
     queryset = Rating_Content.objects.all()
     serializer_class = RatingContentSerializer
     authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]  # unrestricted access
