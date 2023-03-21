@@ -76,3 +76,15 @@ class RatingContentViewSet(viewsets.ModelViewSet):
     serializer_class = RatingContentSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]  # unrestricted access
+
+    def update(self, request, *args, **kwargs):
+        """Disables the built in update method that comes with ModelViewSet.
+        """
+        response = {'message': 'Chill out, ratings cannot be updated like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def create(self, request, *args, **kwargs):
+        """Disables the built in create method that comes with ModelViewSet.
+        """
+        response = {'message': 'Chill out, ratings cannot be created like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
