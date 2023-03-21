@@ -18,7 +18,8 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields to be included or excluded.
         """
         model = Project
-        fields = ('id', 'title', 'description')
+        fields = ('id', 'title', 'description', 'no_of_content_ratings',
+                  'avg_content_rating')
 
 
 class RatingContentSerializer(serializers.ModelSerializer):
