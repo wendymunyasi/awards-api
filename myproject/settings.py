@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Register django rest_framework and the app api
     'rest_framework',
+    'rest_framework.authtoken',
     'api',
 ]
 

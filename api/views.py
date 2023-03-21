@@ -4,6 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
+from rest_framework.authentication import TokenAuthentication
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -12,6 +13,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    authentication_classes = [TokenAuthentication]
 
     # The action decorator will route GET requests by default, but may also
     # accept other HTTP methods by setting the methods argument.
@@ -26,9 +28,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if 'stars' in request.data:
             project = Project.objects.get(id=pk)
             stars = request.data['stars']
-            # user = request.user
-            user = User.objects.get(id=1)
-
+            user = request.user
+            # print('Xtra info {}'.format(user))
             try:
                 # If rating exists for that project then update it
                 rating = Rating_Content.objects.get(
@@ -62,3 +63,4 @@ class RatingContentViewSet(viewsets.ModelViewSet):
     """
     queryset = Rating_Content.objects.all()
     serializer_class = RatingContentSerializer
+    authentication_classes = [TokenAuthentication]
