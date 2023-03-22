@@ -1,12 +1,14 @@
-from .models import Project, Rating_Content, Rating_Usability, Rating_Design
-from .serializers import ProjectSerializer, RatingContentSerializer, \
-    UserSerializer, RatingUsabilitySerializer, RatingDesignSerializer
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
 from django.contrib.auth.models import User
+from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+
+from .models import Project, Rating_Content, Rating_Design, Rating_Usability
+from .serializers import (ProjectSerializer, RatingContentSerializer,
+                          RatingDesignSerializer, RatingUsabilitySerializer,
+                          UserSerializer)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -153,13 +155,13 @@ class RatingContentViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         """Disables the built in update method that comes with ModelViewSet.
         """
-        response = {'message': 'Chill out, ratings cannot be updated like that'}
+        response = {'message': 'Chill out, cannot update ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         """Disables the built in create method that comes with ModelViewSet.
         """
-        response = {'message': 'Chill out, ratings cannot be created like that'}
+        response = {'message': 'Chill out, cannot create ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -175,13 +177,13 @@ class RatingUsabilityViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         """Disables the built in update method that comes with ModelViewSet.
         """
-        response = {'message': 'Chill out, ratings cannot be updated like that'}
+        response = {'message': 'Chill out, cannot update ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         """Disables the built in create method that comes with ModelViewSet.
         """
-        response = {'message': 'Chill out, ratings cannot be created like that'}
+        response = {'message': 'Chill out, cannot create ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -197,11 +199,11 @@ class RatingDesignViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         """Disables the built in update method that comes with ModelViewSet.
         """
-        response = {'message': 'Chill out, ratings cannot be updated like that'}
+        response = {'message': 'Chill out, cannot update ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         """Disables the built in create method that comes with ModelViewSet.
         """
-        response = {'message': 'Chill out, ratings cannot be created like that'}
+        response = {'message': 'Chill out, cannot create ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)

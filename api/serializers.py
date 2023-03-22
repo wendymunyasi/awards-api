@@ -1,7 +1,8 @@
-from rest_framework import serializers
-from .models import Project, Rating_Content, Rating_Usability, Rating_Design
 from django.contrib.auth.models import User
+from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+
+from .models import Project, Rating_Content, Rating_Design, Rating_Usability
 
 # Serializers allow complex data such as querysets and model instances to
 # be converted to native Python datatypes that can then be easily rendered
@@ -83,7 +84,7 @@ class RatingContentSerializer(serializers.ModelSerializer):
 
 
 class RatingUsabilitySerializer(serializers.ModelSerializer):
-    """Serializer to map the Rating_Usability Model instance to the JSON format.
+    """Serializer to map the Rating_Usability Model instance to JSON format.
     """
     class Meta:
         """Class to specify the model associated with the serializer (which
@@ -96,7 +97,7 @@ class RatingUsabilitySerializer(serializers.ModelSerializer):
 
 
 class RatingDesignSerializer(serializers.ModelSerializer):
-    """Serializer to map the Rating_Usability Model instance to the JSON format.
+    """Serializer to map the Rating_Usability Model instance to JSON format.
     """
     class Meta:
         """Class to specify the model associated with the serializer (which

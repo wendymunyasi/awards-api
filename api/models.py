@@ -1,9 +1,8 @@
 import math
-from django.db import models
 
-
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 
 class Project(models.Model):
@@ -13,7 +12,7 @@ class Project(models.Model):
     description = models.TextField(max_length=360)
 
     def no_of_content_ratings(self):
-        """Returns number of content ratings of a project. Filter for each project.
+        """Return no of content ratings of a project. Filter for each project.
         """
         # Include function name in serializers to make it available
 
