@@ -52,6 +52,26 @@ class Project(models.Model):
         else:
             return 0
 
+    def no_of_design_ratings(self):
+        """Returns number of design ratings of a project.
+        """
+        # Include function name in serializers to make it available
+
+        ratings = Rating_Design.objects.filter(project=self)
+        return len(ratings)
+
+    def avg_design_rating(self):
+        """Returns average number of design ratings for each project.
+        """
+        sum = 0
+        ratings = Rating_Design.objects.filter(project=self)
+        for rating in ratings:
+            sum += rating.stars
+        if len(ratings) > 0:
+            return math.floor(sum / len(ratings))
+        else:
+            return 0
+
 
 class Rating_Content(models.Model):
     """Class for rating project according to its content.
@@ -72,6 +92,23 @@ class Rating_Content(models.Model):
 
 class Rating_Usability(models.Model):
     """Class for rating project according to its usability.
+    """
+    # reference to project
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    # reference to logged in user that created rating
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stars = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)])
+
+    class Meta:
+        """If a person tries to rate the same project, it will be rejected.
+        """
+        unique_together = (('user', 'project'))
+        index_together = (('user', 'project'))
+
+
+class Rating_Design(models.Model):
+    """Class for rating project according to its design.
     """
     # reference to project
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
