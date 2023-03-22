@@ -34,9 +34,28 @@ class Project(models.Model):
 
 
 class Rating_Content(models.Model):
-    """Class for rating.
+    """Class for rating project according to its content.
     """
+    # reference to project
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    # reference to logged in user that created rating
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stars = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)])
+
+    class Meta:
+        """If a person tries to rate the same project, it will be rejected.
+        """
+        unique_together = (('user', 'project'))
+        index_together = (('user', 'project'))
+
+
+class Rating_Usability(models.Model):
+    """Class for rating project according to its usability.
+    """
+    # reference to project
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    # reference to logged in user that created rating
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     stars = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(10)])
