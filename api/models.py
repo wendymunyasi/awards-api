@@ -13,7 +13,7 @@ class Project(models.Model):
     description = models.TextField(max_length=360)
 
     def no_of_content_ratings(self):
-        """Returns number of ratings of a project. Filter for each project.
+        """Returns number of content ratings of a project. Filter for each project.
         """
         # Include function name in serializers to make it available
 
@@ -21,10 +21,30 @@ class Project(models.Model):
         return len(ratings)
 
     def avg_content_rating(self):
-        """Returns average number of ratings for each project.
+        """Returns average number of content ratings for each project.
         """
         sum = 0
         ratings = Rating_Content.objects.filter(project=self)
+        for rating in ratings:
+            sum += rating.stars
+        if len(ratings) > 0:
+            return math.floor(sum / len(ratings))
+        else:
+            return 0
+
+    def no_of_usability_ratings(self):
+        """Returns number of usability ratings of a project.
+        """
+        # Include function name in serializers to make it available
+
+        ratings = Rating_Usability.objects.filter(project=self)
+        return len(ratings)
+
+    def avg_usability_rating(self):
+        """Returns average number of usability ratings for each project.
+        """
+        sum = 0
+        ratings = Rating_Usability.objects.filter(project=self)
         for rating in ratings:
             sum += rating.stars
         if len(ratings) > 0:
