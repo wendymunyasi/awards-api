@@ -64,7 +64,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             'no_of_usability_ratings',
             'avg_usability_rating',
             'no_of_design_ratings',
-            'avg_design_rating'
+            'avg_design_rating',
+            'overall_rating'
         )
 
 
