@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Rating_Content, Rating_Usability
+from .models import Project, Rating_Content, Rating_Usability, Rating_Design
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
@@ -62,7 +62,9 @@ class ProjectSerializer(serializers.ModelSerializer):
             'no_of_content_ratings',  # function from models same as below
             'avg_content_rating',  # visible through get projects url
             'no_of_usability_ratings',
-            'avg_usability_rating'
+            'avg_usability_rating',
+            'no_of_design_ratings',
+            'avg_design_rating'
         )
 
 
@@ -89,4 +91,17 @@ class RatingUsabilitySerializer(serializers.ModelSerializer):
         fields to be included or excluded.
         """
         model = Rating_Usability
+        fields = ('id', 'stars', 'project', 'user')
+
+
+class RatingDesignSerializer(serializers.ModelSerializer):
+    """Serializer to map the Rating_Usability Model instance to the JSON format.
+    """
+    class Meta:
+        """Class to specify the model associated with the serializer (which
+        is Rating_Design model), as well as any additional options such as
+        the
+        fields to be included or excluded.
+        """
+        model = Rating_Design
         fields = ('id', 'stars', 'project', 'user')
