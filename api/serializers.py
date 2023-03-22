@@ -28,12 +28,14 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True, 'required': True},
             # 'email': {'write_only': True, 'required': True}
         }
-        # write_only means we won't be able to see it
+        # write_only means we won't be able to see it, hidden from get
+        # required for sending
 
     def create(self, validated_data):
         """This method is already included in the class but I overode it.
         validated data is data coming from the request and has
-        already met all the requirements for the model.
+        already met all the requirements for the model. Now the password will
+        be hashed.
         """
         user = User.objects.create_user(**validated_data)
         Token.objects.create(user=user)
@@ -53,8 +55,15 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields to be included or excluded.
         """
         model = Project
-        fields = ('id', 'title', 'description', 'no_of_content_ratings',
-                  'avg_content_rating')
+        fields = (
+            'id',
+            'title',
+            'description',
+            'no_of_content_ratings',  # function from models same as below
+            'avg_content_rating',  # visible through get projects url
+            'no_of_usability_ratings',
+            'avg_usability_rating'
+        )
 
 
 class RatingContentSerializer(serializers.ModelSerializer):
