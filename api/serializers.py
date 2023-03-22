@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Rating_Content
+from .models import Project, Rating_Content, Rating_Usability
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
@@ -13,6 +13,8 @@ from rest_framework.authtoken.models import Token
 class UserSerializer(serializers.ModelSerializer):
     """Serializer to map the User Model instance to the JSON format.
     """
+    # projects = serializers.HyperlinkedRelatedField(
+    #     many=True, view_name='project-detail', read_only=True)
 
     class Meta:
         """Class to specify the model associated with the serializer (which
@@ -21,8 +23,10 @@ class UserSerializer(serializers.ModelSerializer):
         """
         model = User
         fields = ['id', 'username', 'password']
+        # fields = ['id', 'username', 'projects', 'password']
         extra_kwargs = {
             'password': {'write_only': True, 'required': True},
+            # 'email': {'write_only': True, 'required': True}
         }
         # write_only means we won't be able to see it
 
@@ -63,4 +67,17 @@ class RatingContentSerializer(serializers.ModelSerializer):
         fields to be included or excluded.
         """
         model = Rating_Content
+        fields = ('id', 'stars', 'project', 'user')
+
+
+class RatingUsabilitySerializer(serializers.ModelSerializer):
+    """Serializer to map the Rating_Usability Model instance to the JSON format.
+    """
+    class Meta:
+        """Class to specify the model associated with the serializer (which
+        is Rating_Usability model), as well as any additional options such as
+        the
+        fields to be included or excluded.
+        """
+        model = Rating_Usability
         fields = ('id', 'stars', 'project', 'user')
