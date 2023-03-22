@@ -1,6 +1,6 @@
-from .models import Project, Rating_Content, Rating_Usability
+from .models import Project, Rating_Content, Rating_Usability, Rating_Design
 from .serializers import ProjectSerializer, RatingContentSerializer, \
-    UserSerializer, RatingUsabilitySerializer
+    UserSerializer, RatingUsabilitySerializer, RatingDesignSerializer
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -104,6 +104,42 @@ class ProjectViewSet(viewsets.ModelViewSet):
             response = {'message': 'You need to provide the ratings for stars'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['POST'])
+    def rate_project_design(self, request, pk=None):
+        """Rate the usability of a project.
+        """
+        # Ask for data from database
+        if 'stars' in request.data:
+            project = Project.objects.get(id=pk)
+            stars = request.data['stars']
+            user = request.user
+            # print('Xtra info {}'.format(user))
+            try:
+                # If rating exists for that project then update it
+                rating = Rating_Design.objects.get(
+                    user=user.id, project=project.id)
+                rating.stars = stars
+                rating.save()
+                serializer = RatingDesignSerializer(rating, many=False)
+                response = {
+                    'message': 'Design rating updated',
+                    'result': serializer.data
+                }
+                return Response(response, status=status.HTTP_200_OK)
+            except Exception:
+                # If rating doesn't exist for that project then create it
+                rating = Rating_Design.objects.create(
+                    user=user, project=project, stars=stars)
+                serializer = RatingDesignSerializer(rating, many=False)
+                response = {
+                    'message': 'Design rating created',
+                    'result': serializer.data
+                }
+                return Response(response, status=status.HTTP_200_OK)
+        else:
+            response = {'message': 'You need to provide the ratings for stars'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RatingContentViewSet(viewsets.ModelViewSet):
     """This viewset automatically provides `list`, `create`, `retrieve`,
@@ -133,6 +169,28 @@ class RatingUsabilityViewSet(viewsets.ModelViewSet):
     """
     queryset = Rating_Usability.objects.all()
     serializer_class = RatingUsabilitySerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        """Disables the built in update method that comes with ModelViewSet.
+        """
+        response = {'message': 'Chill out, ratings cannot be updated like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def create(self, request, *args, **kwargs):
+        """Disables the built in create method that comes with ModelViewSet.
+        """
+        response = {'message': 'Chill out, ratings cannot be created like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RatingDesignViewSet(viewsets.ModelViewSet):
+    """This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+    """
+    queryset = Rating_Design.objects.all()
+    serializer_class = RatingDesignSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
