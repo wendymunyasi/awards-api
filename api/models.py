@@ -10,10 +10,21 @@ class Project(models.Model):
     """
     title = models.TextField(max_length=32)
     description = models.TextField(max_length=360)
+    owner = models.ForeignKey(
+        'auth.User',
+        related_name='projects',
+        on_delete=models.CASCADE,
+        null=True
+    )
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['date_created']
 
     def __str__(self):
         """Returns a human readable representation of the project instance."""
-        return '{}'.format(self.title)
+        return self.title
 
     def no_of_content_ratings(self):
         """Return no of content ratings of a project. Filter for each project.

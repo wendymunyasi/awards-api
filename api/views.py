@@ -17,6 +17,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -26,7 +27,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]  # unrestricted access
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        """The perform_create method is called by the CreateModelMixin when
+        a new project instance is created. By default, it simply calls
+        serializer.save() to create the new instance. However, we can
+        override this method to include additional logic. In this case,
+        we're setting the owner field of the new Project instance to be the
+        currently logged in user (self.request.user).
+        """
+        serializer.save(owner=self.request.user)
 
     # The action decorator will route GET requests by default, but may also
     # accept other HTTP methods by setting the methods argument.

@@ -14,8 +14,7 @@ from .models import Project, Rating_Content, Rating_Design, Rating_Usability
 class UserSerializer(serializers.ModelSerializer):
     """Serializer to map the User Model instance to the JSON format.
     """
-    # projects = serializers.HyperlinkedRelatedField(
-    #     many=True, view_name='project-detail', read_only=True)
+    projects = serializers.StringRelatedField(many=True)
 
     class Meta:
         """Class to specify the model associated with the serializer (which
@@ -23,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields to be included or excluded.
         """
         model = User
-        fields = ['id', 'username', 'password']
+        fields = ['id', 'username', 'password', 'projects']
         # fields = ['id', 'username', 'projects', 'password']
         extra_kwargs = {
             'password': {'write_only': True, 'required': True},
@@ -49,6 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     """Serializer to map the Project Model instance to the JSON format.
     """
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         """Class to specify the model associated with the serializer (which
@@ -66,8 +66,12 @@ class ProjectSerializer(serializers.ModelSerializer):
             'avg_usability_rating',
             'no_of_design_ratings',
             'avg_design_rating',
-            'overall_rating'
+            'overall_rating',
+            'owner',
+            'date_created',
+            'date_modified',
         )
+        read_only_fields = ('date_created', 'date_modified')
 
 
 class RatingContentSerializer(serializers.ModelSerializer):
@@ -76,8 +80,7 @@ class RatingContentSerializer(serializers.ModelSerializer):
     class Meta:
         """Class to specify the model associated with the serializer (which
         is Rating_Content model), as well as any additional options such as
-        the
-        fields to be included or excluded.
+        the fields to be included or excluded.
         """
         model = Rating_Content
         fields = ('id', 'stars', 'project', 'user')
@@ -89,8 +92,7 @@ class RatingUsabilitySerializer(serializers.ModelSerializer):
     class Meta:
         """Class to specify the model associated with the serializer (which
         is Rating_Usability model), as well as any additional options such as
-        the
-        fields to be included or excluded.
+        the fields to be included or excluded.
         """
         model = Rating_Usability
         fields = ('id', 'stars', 'project', 'user')
@@ -102,8 +104,7 @@ class RatingDesignSerializer(serializers.ModelSerializer):
     class Meta:
         """Class to specify the model associated with the serializer (which
         is Rating_Design model), as well as any additional options such as
-        the
-        fields to be included or excluded.
+        the fields to be included or excluded.
         """
         model = Rating_Design
         fields = ('id', 'stars', 'project', 'user')
