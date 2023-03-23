@@ -12,7 +12,7 @@ class Project(models.Model):
     description = models.TextField(max_length=360)
 
     def __str__(self):
-        ''' This is to return a human readable representation of the project instance '''
+        """Returns a human readable representation of the project instance."""
         return '{}'.format(self.title)
 
     def no_of_content_ratings(self):
@@ -115,7 +115,7 @@ class Rating_Content(models.Model):
         index_together = (('user', 'project'))
 
     def __str__(self):
-        ''' This is to return a human readable representation of the project instance '''
+        """Returns a human readable representation of the project instance."""
         return 'Project Name: {}'.format(self.project)
 
 
@@ -136,7 +136,7 @@ class Rating_Usability(models.Model):
         index_together = (('user', 'project'))
 
     def __str__(self):
-        ''' This is to return a human readable representation of the project instance '''
+        """Returns a human readable representation of the project instance."""
         return 'Project Name: {}'.format(self.project)
 
 
@@ -157,5 +157,5 @@ class Rating_Design(models.Model):
         index_together = (('user', 'project'))
 
     def __str__(self):
-        ''' This is to return a human readable representation of the project instance '''
+        """Returns a human readable representation of the project instance."""
         return 'Project Name: {}'.format(self.project)
