@@ -207,3 +207,36 @@ class RatingDesignViewSet(viewsets.ModelViewSet):
         """
         response = {'message': 'Chill out, cannot create ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AllRatingsViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A viewset that retrieves all ratings from all rating types.
+    """
+    serializer_class = None
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        """Fetches all ratings from all three models and serializes the data
+        using their respective serializers.
+        """
+        # Retrieve all ratings from all rating types
+        content_ratings = Rating_Content.objects.all()
+        design_ratings = Rating_Design.objects.all()
+        usability_ratings = Rating_Usability.objects.all()
+
+        # Serialize the rating objects using the appropriate serializer
+        content_data = RatingContentSerializer(content_ratings, many=True).data
+        design_data = RatingDesignSerializer(design_ratings, many=True).data
+        usability_data = RatingUsabilitySerializer(
+            usability_ratings, many=True).data
+
+        # Combine the serialized data into a single response
+        data = {
+            'Content Ratings': content_data,
+            'Design Ratings': design_data,
+            'Usability Ratings': usability_data
+        }
+
+        return Response(data)
