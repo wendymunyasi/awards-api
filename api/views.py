@@ -197,6 +197,18 @@ class RatingUsabilityViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    def list(self, request, *args, **kwargs):
+        """Retrieves the data, serializes it, and returns it along with the
+        custom text message.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        response_data = {
+            'message': 'List of usability ratings',
+            'data': serializer.data
+        }
+        return Response(response_data)
+
     def update(self, request, *args, **kwargs):
         """Disables the built in update method that comes with ModelViewSet.
         """
@@ -218,6 +230,18 @@ class RatingDesignViewSet(viewsets.ModelViewSet):
     serializer_class = RatingDesignSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        """Retrieves the data, serializes it, and returns it along with the
+        custom text message.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        response_data = {
+            'message': 'List of design ratings',
+            'data': serializer.data
+        }
+        return Response(response_data)
 
     def update(self, request, *args, **kwargs):
         """Disables the built in update method that comes with ModelViewSet.
