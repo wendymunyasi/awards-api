@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,6 +9,21 @@ from .models import Project, Rating_Content, Rating_Design, Rating_Usability
 from .serializers import (ProjectSerializer, RatingContentSerializer,
                           RatingDesignSerializer, RatingUsabilitySerializer,
                           UserSerializer)
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        """Checks if owner has permission to edit the project object
+        """
+        # Read permissions are allowed to any request
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        # Write permissions are only allowed to the owner of the project
+        return obj.owner == request.user
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -27,7 +42,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         """The perform_create method is called by the CreateModelMixin when
@@ -38,6 +53,34 @@ class ProjectViewSet(viewsets.ModelViewSet):
         currently logged in user (self.request.user).
         """
         serializer.save(owner=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        """Updates a project instance and return a custom response with
+        message and updated data. Overrides default `update` method provided
+        by `ModelViewSet`.
+        """
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance,
+            data=request.data,
+            partial=partial
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        # Return custom response with message
+        message = {'message': 'Project updated'}
+        return Response({**message, **{'data': serializer.data}})
+
+    def destroy(self, request, *args, **kwargs):
+        """Delete a project instance and return a custom response with a
+        message. Overrides default `destroy` method provided by `ModelViewSet`.
+        """
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        # Return custom response with message
+        message = {'message': 'Project deleted'}
+        return Response(message, status=status.HTTP_204_NO_CONTENT)
 
     # The action decorator will route GET requests by default, but may also
     # accept other HTTP methods by setting the methods argument.
