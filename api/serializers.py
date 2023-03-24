@@ -147,10 +147,20 @@ class RatingUsabilitySerializer(serializers.ModelSerializer):
 class RatingDesignSerializer(serializers.ModelSerializer):
     """Serializer to map the Rating_Usability Model instance to JSON format.
     """
+    user = UserRatingSerializer()
+    project = ProjectRatingSerializer()
+
     class Meta:
         """Class to specify the model associated with the serializer (which
         is Rating_Design model), as well as any additional options such as
         the fields to be included or excluded.
         """
         model = Rating_Design
-        fields = ('id', 'stars', 'project', 'user')
+        fields = (
+            'id',
+            'stars',
+            'project',
+            'user',
+            'date_created',
+            'date_modified',
+        )
