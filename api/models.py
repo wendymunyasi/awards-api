@@ -141,6 +141,8 @@ class Rating_Usability(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     stars = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(10)])
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         """If a person tries to rate the same project, it will be rejected.
