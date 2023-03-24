@@ -14,7 +14,7 @@ from .models import Project, Rating_Content, Rating_Design, Rating_Usability
 class UserSerializer(serializers.ModelSerializer):
     """Serializer to map the User Model instance to the JSON format.
     """
-    projects = serializers.StringRelatedField(many=True)
+    projects = serializers.StringRelatedField(many=True, required=False)
 
     class Meta:
         """Class to specify the model associated with the serializer (which
@@ -23,7 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         """
         model = User
         fields = ['id', 'username', 'password', 'projects']
-        # fields = ['id', 'username', 'projects', 'password']
         extra_kwargs = {
             'password': {'write_only': True, 'required': True},
             # 'email': {'write_only': True, 'required': True}
@@ -37,7 +36,10 @@ class UserSerializer(serializers.ModelSerializer):
         already met all the requirements for the model. Now the password will
         be hashed.
         """
+        projects_data = validated_data.pop('projects', None)
         user = User.objects.create_user(**validated_data)
+        if projects_data:
+            user.projects.set(projects_data)
         Token.objects.create(user=user)
         # You can assign a variable to the token and pass it to return
         # to make it available. In this case it is not needed.
