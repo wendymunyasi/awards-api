@@ -45,6 +45,32 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserRatingSerializer(serializers.ModelSerializer):
+    """Serializer to map the User Model instance to the JSON format.
+    """
+    class Meta:
+        """Class to specify the model associated with the serializer (which
+        is User model), as well as any additional options such as the
+        fields to be included or excluded.
+        """
+        model = User
+        fields = ['id', 'username']
+
+
+class ProjectRatingSerializer(serializers.ModelSerializer):
+    """Serializer to map the User Model instance to the JSON format.
+    """
+    owner = UserRatingSerializer()
+
+    class Meta:
+        """Class to specify the model associated with the serializer (which
+        is User model), as well as any additional options such as the
+        fields to be included or excluded.
+        """
+        model = Project
+        fields = ['id', 'title', 'owner']
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     """Serializer to map the Project Model instance to the JSON format.
     """
@@ -77,13 +103,23 @@ class ProjectSerializer(serializers.ModelSerializer):
 class RatingContentSerializer(serializers.ModelSerializer):
     """Serializer to map the Rating_Content Model instance to the JSON format.
     """
+    user = UserRatingSerializer()
+    project = ProjectRatingSerializer()
+
     class Meta:
         """Class to specify the model associated with the serializer (which
         is Rating_Content model), as well as any additional options such as
         the fields to be included or excluded.
         """
         model = Rating_Content
-        fields = ('id', 'stars', 'project', 'user')
+        fields = (
+            'id',
+            'stars',
+            'project',
+            'user',
+            'date_created',
+            'date_modified',
+        )
 
 
 class RatingUsabilitySerializer(serializers.ModelSerializer):
