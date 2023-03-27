@@ -230,6 +230,16 @@ class RatingContentViewSet(viewsets.ModelViewSet):
         response = {'message': 'Chill out, cannot create ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+    def destroy(self, request, *args, **kwargs):
+        """Delete a rating instance and return a custom response with a
+        message. Overrides default `destroy` method provided by `ModelViewSet`.
+        """
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        # Return custom response with message
+        message = {'message': 'Content rating deleted'}
+        return Response(message, status=status.HTTP_204_NO_CONTENT)
+
 
 class RatingUsabilityViewSet(viewsets.ModelViewSet):
     """This viewset automatically provides `list`, `create`, `retrieve`,
@@ -264,6 +274,16 @@ class RatingUsabilityViewSet(viewsets.ModelViewSet):
         response = {'message': 'Chill out, cannot create ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+    def destroy(self, request, *args, **kwargs):
+        """Delete a rating instance and return a custom response with a
+        message. Overrides default `destroy` method provided by `ModelViewSet`.
+        """
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        # Return custom response with message
+        message = {'message': 'Usability rating deleted'}
+        return Response(message, status=status.HTTP_204_NO_CONTENT)
+
 
 class RatingDesignViewSet(viewsets.ModelViewSet):
     """This viewset automatically provides `list`, `create`, `retrieve`,
@@ -297,6 +317,16 @@ class RatingDesignViewSet(viewsets.ModelViewSet):
         """
         response = {'message': 'Chill out, cannot create ratings like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        """Delete a rating instance and return a custom response with a
+        message. Overrides default `destroy` method provided by `ModelViewSet`.
+        """
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        # Return custom response with message
+        message = {'message': 'Design rating deleted'}
+        return Response(message, status=status.HTTP_204_NO_CONTENT)
 
 
 class AllRatingsViewSet(viewsets.ReadOnlyModelViewSet):
