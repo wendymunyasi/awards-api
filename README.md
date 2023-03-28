@@ -2,9 +2,10 @@
 This is a web api that allows users to post their projects and have them voted for. The project has a backend api built using Django Rest Framework.
 
 
-## Demo
+## Demo and documentation
 
 The demo link is: [demo](https://youtu.be/GfOlsq77XAM)
+Documentation: [docs](https://documenter.getpostman.com/view/10693271/2s93RL2H1a)
 
 ###  Prerequisites and Installing
 You need to install the following software/technologies to have the app running on your local machine for development and testing purposes. Instructions on how to install will also be provided next to the software.
